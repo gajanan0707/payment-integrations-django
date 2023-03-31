@@ -19,6 +19,9 @@
         <link rel="stylesheet"
               href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
         <link rel="stylesheet" href="{% static 'assets/css/fontawesome.min.css' %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!--
         TemplateMo 559 Zay Shop
         https://templatemo.com/tm-559-zay-shop
@@ -83,6 +86,18 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
                     </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="navbar align-self-center d-flex">
@@ -98,14 +113,14 @@
                    data-bs-target="#templatemo_search">
                     <i class="fa fa-fw fa-search text-dark mr-2"></i>
                 </a>
-                <a class="nav-icon position-relative text-decoration-none" href="#">
-                    <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
-                </a>
-                <a class="nav-icon position-relative text-decoration-none" href="#">
-                    <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
-                </a>
+                {#                <a class="nav-icon position-relative text-decoration-none" href="#">#}
+                {#                    <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>#}
+                {#                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>#}
+                {#                </a>#}
+                {#                <a class="nav-icon position-relative text-decoration-none" href="#">#}
+                {#                    <i class="fa fa-fw fa-user text-dark mr-3"></i>#}
+                {#                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>#}
+                {#                </a>#}
             </div>
         </div>
 
@@ -246,7 +261,8 @@
                 <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
             </div>
             <div class="col-12 col-md-4 p-5 mt-3">
-                <a href="#"><img src="{% static '/img/category_img_02.jpg' %}" class="rounded-circle img-fluid border"></a>
+                <a href="#"><img src="{% static 'assets/img/category_img_02.jpg' %}"
+                                 class="rounded-circle img-fluid border"></a>
                 <h2 class="h5 text-center mt-3 mb-3">Shoes</h2>
                 <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
             </div>

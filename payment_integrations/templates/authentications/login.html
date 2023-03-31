@@ -1,0 +1,98 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block body %}
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7 col-lg-5">
+                    <div class="wrap">
+                        <div class="img" style="background-image: url({% static 'assets/img/bg-1.jpg' %});"></div>
+                        <div class="login-wrap p-4 p-md-5">
+                            <div class="d-flex">
+                                <div class="w-100">
+                                    <h3 class="mb-4">LogIn</h3>
+                                </div>
+                                {#                                <div class="w-100">#}
+                                {#                                    <p class="social-media d-flex justify-content-end">#}
+                                {#                                        <a href="#"#}
+                                {#                                           class="social-icon d-flex align-items-center justify-content-center"><span#}
+                                {#                                                class="fa fa-facebook"></span></a>#}
+                                {#                                        <a href="#"#}
+                                {#                                           class="social-icon d-flex align-items-center justify-content-center"><span#}
+                                {#                                                class="fa fa-twitter"></span></a>#}
+                                {#                                    </p>#}
+                                {#                                </div>#}
+                            </div>
+                            <form method="POST" id="login_form" class="signin-form">
+                                <div class="form-group mt-3">
+                                    <input id="email_id" type="email" class="form-control"
+                                           placeholder="Enter Your Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <input id="password_id" type="password" class="form-control"
+                                           placeholder="Enter Your Password" required>
+                                    <span toggle="#password_id"
+                                          class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="form-control btn btn-primary rounded submit px-3">Sign
+                                        In
+                                    </button>
+                                </div>
+                                <div class="form-group d-md-flex">
+                                    <div class="w-50 text-left">
+                                        <label class="checkbox-wrap checkbox-primary mb-0">Remember Me
+                                            <input type="checkbox" checked>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="w-50 text-md-right">
+                                        <a href="#">Forgot Password</a>
+                                    </div>
+                                </div>
+                            </form>
+                            <p class="text-center">Not a member? <a href="{% url 'signup' %}">Sign Up</a></p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script>
+        $("#login_form").on("submit", function (e) {
+            e.preventDefault();
+            let signInData = {
+                "email": $("#email_id").val(),
+                "password": $("#password_id").val(),
+            };
+            console.log("signupData", signInData)
+            $.ajax({
+                type: "POST",
+                url: `/user/login/`,
+                data: signInData,
+                success: function (data) {
+                    console.log("data", data)
+                    Swal.fire({
+                        title: "User successfully Login.",
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                    }).then((result) => {
+                        window.location = `/`;
+                    })
+                },
+                error: function (err) {
+                    Swal.fire(err["responseJSON"]["error"])
+                }
+            })
+        });
+    </script>
+
+{% endblock body %}

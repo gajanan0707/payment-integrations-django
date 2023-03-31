@@ -3,7 +3,36 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
+
+class UserManager(BaseUserManager):
+    """
+    BaseUserManager provides:
+        * normalize_email()
+    Default implementation of UserManager works with username, since we user `email` as username field so we have custom implementation of _create_user() etc.
+    """
+
+    def _create_user(self, email, password, **extra_fields):
+        """
+        Creates and saves a User with the given email and password.
+        """
+        if not email:
+            raise ValueError("Users must have an email address")
+        # normalize_email() does .lower() on domain_part, i.e converts Jane@Moveeasy.com to Jane@moveeasy.com
+        email = self.normalize_email(email)
+        user = self.model(email=email, is_active=True, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields["is_staff"] = True
+        extra_fields["is_superuser"] = True
+        return self._create_user(email, password, **extra_fields)
 
 
 # Create your models here.
@@ -19,6 +48,7 @@ class User(AbstractBaseUser):
     )
     is_active = models.BooleanField(_("active"), default=True)
 
+    objects = UserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -29,18 +59,3 @@ class User(AbstractBaseUser):
 
     def get_short_name(self):
         return self.first_name
-
-    def _create_user(self, email, password, **extra_fields):
-        """
-        Creates and saves a User with the given email and password.
-        """
-        if not email:
-            raise ValueError("Users must have an email address")
-        email = self.normalize_email(email)
-        user = self.model(email=email, is_active=True, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, email, password=None, **extra_fields):
-        return self._create_user(email, password, **extra_fields)
