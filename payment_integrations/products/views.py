@@ -33,3 +33,11 @@ def add_to_cart(request):
         else:
             return JsonResponse({"error": "Product not found"}, status=404)
     return render(request, "shop.html")
+
+
+@login_required
+def show_cart(request):
+    context = {
+        "items": Cart.objects.filter(user_id=request.user.id)
+    }
+    return render(request, "products/cart_details.html", context)
