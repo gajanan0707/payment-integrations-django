@@ -21,14 +21,14 @@ def add_to_cart(request):
                 cart.total = cart.total + product.price
                 cart.save()
                 return JsonResponse(
-                    {"success": "Cart successFully updated"}, status=200
+                    {"success": "This item quantity was updated."}, status=200
                 )
             except Cart.DoesNotExist:
                 Cart.objects.create(
                     user=request.user, product=product, count=1, total=product.price
                 )
                 return JsonResponse(
-                    {"success": "Product added in Cart successFully"}, status=200
+                    {"success": "This item was added to your cart."}, status=200
                 )
         else:
             return JsonResponse({"error": "Product not found"}, status=404)
