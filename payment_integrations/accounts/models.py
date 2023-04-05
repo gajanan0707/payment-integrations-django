@@ -1,7 +1,4 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
@@ -47,15 +44,23 @@ class User(AbstractBaseUser):
         unique=True,
     )
     is_active = models.BooleanField(_("active"), default=True)
+    is_staff = models.BooleanField(_("staff"), default=False)
+    is_superuser = models.BooleanField(_("staff"), default=False)
 
     objects = UserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     class Meta:
-        verbose_name = _("abstract_user")
-        verbose_name_plural = _("abstract_users")
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
         # abstract = True
 
     def get_short_name(self):
         return self.first_name
+
+    def has_perm(self, perm, obj=None):
+        return self.is_superuser
+
+    def has_module_perms(self, app_label):
+        return self.is_superuser
