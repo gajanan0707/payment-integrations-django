@@ -1,3 +1,4 @@
+from products.models import Product
 from django.shortcuts import render
 
 
@@ -13,7 +14,8 @@ def about(request):
 
 
 def shop(request):
-    return render(request, "shop.html")
+    products = Product.objects.all().values("id", "name", "price", "image", "rating")
+    return render(request, "shop.html", context={"products": products})
 
 
 def contact_us(request):

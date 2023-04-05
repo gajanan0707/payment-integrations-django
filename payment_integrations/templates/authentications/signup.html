@@ -82,7 +82,6 @@
                 "username": $("#username_id").val(),
                 "password": $("#password_id").val(),
             };
-            console.log("signupData", signupData)
             $.ajax({
                 type: "POST",
                 url: `/user/signup/`,
