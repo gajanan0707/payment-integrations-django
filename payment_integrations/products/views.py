@@ -1,9 +1,9 @@
+from django.db.models import Sum
+from .models import Product, Cart
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-
-from products.models import Product, Cart
 
 
 # Create your views here.
@@ -36,8 +36,11 @@ def add_to_cart(request):
 
 
 @login_required
-def show_cart(request):
+def my_cart(request):
+    cart_item = Cart.objects.filter(user_id=request.user.id).select_related('product')
     context = {
-        "items": Cart.objects.filter(user_id=request.user.id)
+        "items": cart_item,
+        "total": cart_item.aggregate(total_price=Sum('total')),
+        "total_items": cart_item.aggregate(item=Sum('count'))
     }
     return render(request, "products/cart_details.html", context)
